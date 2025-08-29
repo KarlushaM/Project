@@ -19,7 +19,7 @@ class Klass(models.Model):
 		verbose_name = "Класс"
 		
 
-class Teachers(models.Model):
+class Teacher(models.Model):
 
 	fio = models.CharField("ФИО", max_length=50)
 	description = models.TextField("Onиcaниe", null=True, blank=True)

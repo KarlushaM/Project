@@ -9,7 +9,7 @@
     <h1>Список репетиторов</h1>
         <ul>
             {% for teacher in teachers %}
-            <li>{{ teacher.name }}, {{ teacher.subjects}}, {{ teacher.klass}}</li>
+            <li>{{ teacher.fio }}</li>
             {% endfor %}
         </ul>
         <form>

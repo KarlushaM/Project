@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import first_page
+from .views import teachers_list
 
 urlpatterns = [
-		path('', first_page),
+		path('', teachers_list),
 ]

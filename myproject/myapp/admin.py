@@ -1,11 +1,10 @@
 from django.contrib import admin
 from .models import Subjects
 from .models import Klass
-from .models import Teachers
+from .models import Teacher
 
 admin.site.register(Subjects)
 admin.site.register(Klass)
-admin.site.register(Teachers)
+admin.site.register(Teacher)
 
 
-# Register your models here.
