@@ -8,8 +8,8 @@
 <body>
     <h1>Список репетиторов</h1>
         <ul>
-            {% for book in books %}
-            <li>{{ book.name }} {{ book.description}} {{ book.published}}</li>
+            {% for teacher in teachers %}
+            <li>{{ teacher.name }}, {{ teacher.subjects}}, {{ teacher.klass}}</li>
             {% endfor %}
         </ul>
         <form>
