@@ -37,3 +37,7 @@ class Teacher(models.Model):
 	@property
 	def subjects_list(self):
 		return ", ".join(map(str, self.subjects.all()))
+	
+	@property
+	def klass_list(self):
+		return ", ".join(map(str, self.klass.all()))

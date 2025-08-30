@@ -9,11 +9,9 @@
     <h1>Список репетиторов</h1>
         <ul>
             {% for teacher in teachers %}
-            <li>{{ teacher.fio }}</li>
+            <li><a href="{% url 'teacher_deatails' teacher.id %}">{{teacher.fio }} {{teacher.subjects_list}}</a></li>
             {% endfor %}
         </ul>
-        <form>
-            {{ form }}
-        </form>
+
 </body>
 </html>
