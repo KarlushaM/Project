@@ -26,6 +26,7 @@ class Teacher(models.Model):
 	price = models.TextField("Цена", null=True, blank=True)
 	subjects = models.ManyToManyField(Subjects, verbose_name="Учебный предмет")
 	klass = models.ManyToManyField(Klass, verbose_name= "Класс")
+	phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
 
 	def __str__(self):
 		return f"{self.fio}, {self.subjects_list}"

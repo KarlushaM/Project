@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> {{ teacher.fio}}</title>
+    <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #F8FAFF;
+      color: #2D3748;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .teacher-profile {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .teacher-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: #718096;
+      margin-right: 20px;
+      font-weight: bold;
+    }
+
+    .teacher-name {
+      margin: 0;
+      font-size: 28px;
+      color: #2D3748;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4A5568;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title svg {
+      margin-right: 8px;
+      color: #2D5BFF;
+    }
+
+    .section-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #2D3748;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background-color: #ebf4ff;
+      color: #2D5BFF;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .price-box {
+      background-color: #f0fdf4;
+      border-left: 4px solid #38a169;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #2F855A;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #2D5BFF;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn:hover {
+      background-color: #1d4edb;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #2D5BFF;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    #contacts-block {
+      overflow: hidden;
+      opacity: 0;
+      max-height: 0;
+      padding: 0 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <a href="{% url 'teachers_list' %}" class="back-link">← Назад к списку репетиторов</a>
+
+    <div class="teacher-profile">
+      <div class="teacher-header">
+        <div class="avatar">{{ teacher.fio|first }}</div>
+        <h1 class="teacher-name">{{ teacher.fio }}</h1>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">
+          📚 Предметы
+        </h3>
+        <div class="tag-list">
+          {% for subject in teacher.subjects.all %}
+            <span class="tag">{{ subject.name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">
+          🎒 Классы
+        </h3>
+        <div class="tag-list">
+          {% for klass in teacher.klass.all %}
+            <span class="tag">{{ klass.name }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">💰 Цена за занятие</h3>
+        <div class="price-box">{{ teacher.price }}</div>
+      </div>
+
+      <div class="section">
+        <h3 class="section-title">📝 Описание</h3>
+        <p class="section-content">{{ teacher.description|linebreaks }}</p>
+      </div>
+
+      {% if user.is_authenticated %}
+          <button id="show-contacts-btn" class="btn">📞 Показать контакты для записи</button>
+
+          <div id="contacts-block" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e2e8f0;">
+            <h3 style="margin-top: 0; color: #2D3748;">Контакты репетитора</h3>
+            <p><strong>Телефон:</strong> {{ teacher.phone|default:"Не указан" }}</p>
+            <p style="color: #e53e3e; font-size: 14px; margin-top: 15px;">
+              📌 Свяжитесь с репетитором напрямую, чтобы договориться о занятии.
+            </p>
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const button = document.getElementById('show-contacts-btn');
+              const contactsBlock = document.getElementById('contacts-block');
+
+              if (!button || !contactsBlock) {
+                console.error('Ошибка: не найдены элементы #show-contacts-btn или #contacts-block');
+                return;
+              }
+
+              button.addEventListener('click', function() {
+                if (contactsBlock.style.display === 'none' || contactsBlock.style.display === '') {
+                  contactsBlock.style.display = 'block';
+                  this.textContent = '🙈 Скрыть контакты';
+                } else {
+                  contactsBlock.style.display = 'none';
+                  this.textContent = '📞 Показать контакты для записи';
+                }
+              });
+            });
+          </script>
+      {% else %}
+          <p style="color: #e53e3e; font-weight: 500; margin: 10px 0;">
+            🔐 Чтобы увидеть контакты и записаться — <a href="{% url 'login' %}" style="color: #2D5BFF;">войдите</a> или <a href="{% url 'register' %}" style="color: #2D5BFF;">зарегистрируйтесь</a>.
+          </p>
+          <a href="{% url 'login' %}?next={{ request.path }}" class="btn">🔐 Войти, чтобы записаться</a>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

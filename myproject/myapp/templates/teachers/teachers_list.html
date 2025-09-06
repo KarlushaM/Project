@@ -4,14 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список репетиторов</title>
+    <style>
+        body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #e8ecf7; /* мягкий фон */
+        color: #2D3748; /* основной текст */
+        margin: 0;
+        padding: 20px;
+        }
+
+        h1 {
+        text-align: center;
+        color: #2D3748;
+        margin-bottom: 30px;
+        }
+        
+        .teacher-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+        }
+
+        .teacher-card {
+        display: block;
+        margin: 0 auto;
+        max-width: 800px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+        }
+
+        .teacher-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        cursor: pointer;
+        }
+
+        .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: #718096;
+        margin-right: 20px;
+        font-weight: bold;
+        }
+
+        .teacher-name {
+        margin-top: 0;
+        color: #2D3748;
+        border-bottom: 2px solid transparent;
+        transition: border-color 0.2s ease;
+        display: inline-block;
+        }
+
+
+        .teacher-card:hover .teacher-name {
+        border-bottom-color: #2D5BFF; /* яркий акцент при наведении */
+        }
+
+        .subjects, .klass, .price {
+        font-size: 0.9em;
+        color: #718096; /* вторичный текст */
+        margin: 5px 0;
+        }
+
+        .description {
+        margin: 10px 0;
+        line-height: 1.5;
+        color: #4A5568; 
+        }
+
+
+        .cta-button {
+        background-color: #2D5BFF;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: background-color 0.2s;
+        }
+
+        .cta-button:hover {
+        background-color: #1d4edb;
+        }
+  </style>
 </head>
 <body>
+    <div style ="text-align: right;">
+    {% if user.is_authenticated %}
+    Добро пожаловать, {{ user.username }}! <a href="{% url 'logout' %}">Выйти</a>
+    {% else %}
+    <a href="{% url 'login' %}">Войти</a> | <a href="{% url 'register' %}">Регистрация</a>
+    {% endif %}
+    </div>
+    
     <h1>Список репетиторов</h1>
-        <ul>
-            {% for teacher in teachers %}
-            <li><a href="{% url 'teacher_deatails' teacher.id %}">{{teacher.fio }} {{teacher.subjects_list}}</a></li>
-            {% endfor %}
-        </ul>
+        {% for teacher in teachers %}
+            <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
+            <div class="teacher-header">
+                <div class="avatar">{{ teacher.fio|first }}</div>
+                <h1 class="teacher-name">{{ teacher.fio }}</h1>
+            </div>
+            <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+            <p class="klass">Классы: {{ teacher.klass_list }}</p>
+            <p class="price">Цена: {{ teacher.price }}</p>
+            </a>
+        {% endfor %}
 
 </body>
 </html>
