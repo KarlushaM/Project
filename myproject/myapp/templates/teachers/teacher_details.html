@@ -186,12 +186,21 @@
         <p class="section-content">{{ teacher.description|linebreaks }}</p>
       </div>
 
+<!-- DEBUG -->
+<div style="background: #fff3cd; padding: 15px; border: 2px solid #ffeaa7; margin: 15px 0; font-family: monospace;">
+  <h4>🔍 DEBUG: teacher object</h4>
+  <p><strong>ФИО:</strong> {{ teacher.fio }}</p>
+  <p><strong>Телефон (сырой):</strong> [{{ teacher.phone }}]</p>
+  <p><strong>Телефон с default:</strong> {{ teacher.phone|default:"— не задан —" }}</p>
+  <p><strong>Email:</strong> {{ teacher.email|default:"—" }}</p>
+  <p><strong>Цена:</strong> {{ teacher.price }}</p>
+</div>
       {% if user.is_authenticated %}
           <button id="show-contacts-btn" class="btn">📞 Показать контакты для записи</button>
 
           <div id="contacts-block" style="display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e2e8f0;">
             <h3 style="margin-top: 0; color: #2D3748;">Контакты репетитора</h3>
-            <p><strong>Телефон:</strong> {{ teacher.phone|default:"Не указан" }}</p>
+            <p><strong>Телефон:</strong> {{ teacher.phone|default:"не указан" }}</p>
             <p style="color: #e53e3e; font-size: 14px; margin-top: 15px;">
               📌 Свяжитесь с репетитором напрямую, чтобы договориться о занятии.
             </p>
