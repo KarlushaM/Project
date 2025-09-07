@@ -16,10 +16,10 @@ class TeachersDetailsView(DetailView):
 	template_name = "teachers/teacher_details.html"
 	context_object_name = "teacher"
 	
-	def dispatch(self, request, *args, **kwargs):
-		if not request.user.is_authenticated:
-			return redirect('login')
-		return super().dispatch(request, *args, **kwargs)
+	# def dispatch(self, request, *args, **kwargs):
+	# 	if not request.user.is_authenticated:
+	# 		return redirect('login')
+	# 	return super().dispatch(request, *args, **kwargs)
 
 class TeacherFormView(CreateView):
 	model = Teacher
