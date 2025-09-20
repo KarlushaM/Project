@@ -9,10 +9,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <style>
 
-        h1 {
-            text-align: center;
-            color: #2D3748;
-        }
         .form-container {
             max-width: 500px;
             margin: 0 auto;
@@ -42,26 +38,24 @@
 </head>
 <body>
     <div style ="text-align: right;">
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.path }}">
-            <button type="submit" class="btn-v">Выйти</button>
-        </form>
-    {% else %}
-        <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-        <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
-    {% endif %}
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn-v">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+        {% endif %}
     </div>
-
     <a href="{% url 'teachers_list' %}" class="back-button">
         ← Назад к списку репетиторов
     </a>
-
-    <!-- Теперь контейнер с формой -->
+    
+    <h1>Сойдай своё объявление</h1>
     <div class="form-container">
-        <h1>Сойдай своё объявление</h1>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form }}
             <button type="submit" class="btn-v">Создать</button>

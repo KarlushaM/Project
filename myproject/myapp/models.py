@@ -21,12 +21,14 @@ class Klass(models.Model):
 
 class Teacher(models.Model):
 
+	photo = models.ImageField(upload_to='teachers_photos/', blank=True, null=True, verbose_name="Фото")
 	fio = models.CharField("ФИО", max_length=50)
 	description = models.TextField("Onиcaниe", null=True, blank=True)
 	price = models.TextField("Цена", null=True, blank=True)
 	subjects = models.ManyToManyField(Subjects, verbose_name="Учебный предмет")
 	klass = models.ManyToManyField(Klass, verbose_name= "Класс")
 	phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
+
 
 	def __str__(self):
 		return f"{self.fio}, {self.subjects_list}"

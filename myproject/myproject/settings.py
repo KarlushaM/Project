@@ -126,5 +126,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
-# LOGIN_REDIRECT_URL = reverse_lazy('teachers_list')
-# LOGOUT_REDIRECT_URL = reverse_lazy('teachers_list')
+
+import os
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

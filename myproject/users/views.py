@@ -20,12 +20,10 @@ def register(request):
 class ForceLogoutView(View):
     def post(self, request):
         logout(request)
-        messages.success(request, "Вы успешно вышли из системы.")
         return redirect('teacher_list')
 
     def get(self, request):
         logout(request)
-        messages.success(request, "Вы успешно вышли из системы.")
         return redirect('teacher_list')
 
 
