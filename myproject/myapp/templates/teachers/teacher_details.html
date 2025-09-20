@@ -1,17 +1,14 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {{ teacher.fio}}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #e8ecf7; /* мягкий фон */
-      color: #2D3748; /* основной текст */
-      margin: 0;
-      padding: 20px;
-    }
 
     .container {
       max-width: 800px;
@@ -102,48 +99,6 @@
       color: #2F855A;
     }
 
-    .btn {
-      display: inline-block;
-      background-color: #2D5BFF;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 16px;
-      transition: background-color 0.2s;
-      margin-top: 10px;
-    }
-
-    .btn:hover {
-      background-color: #1d4edb;
-    }
-    
-    .back-button {
-        display: block;
-        width: fit-content;
-        color: #007bff;
-        text-decoration: none;
-        background: none;
-        border: none;
-        padding: 10px 16px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border-radius: 8px;
-        font-weight: 500;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    .back-button:hover {
-        background-color: #e3f2fd;
-        transform: translateY(-1px);
-    }
-    .back-button svg {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-    }
     
     #contacts-block {
         display: none;
@@ -155,59 +110,21 @@
         transition: all 0.3s ease;
     }
 
-    .btn-outline {
-        display: inline-block;
-        padding: 10px 16px;
-        margin: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #007bff;
-        text-decoration: none;
-        border: 2px solid #007bff;
-        border-radius: 8px;
-        background: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-    .btn-outline:hover {
-        background-color: #e3f2fd;
-        transform: translateY(-1px);
-        border-color: #0056b3;
-        }
-
-    .btn-v {
-        display: inline-block;
-        background-color: #2D5BFF;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: background-color 0.2s;
-        margin-top: 10px;
-        }
-
-    .btn-v:hover {
-        background-color: #1d4edb;
-        transform: translateY(-1px);
-        }
   </style>
 
 </head>
 <body>
    <div style ="text-align: right;">
-        {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-v">Выйти</button>
-            </form>
-        {% else %}
-            <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-            <a href="{% url 'login' %}" class="btn-v">Войти</a>
-        {% endif %}
+      {% if user.is_authenticated %}
+          <form method="post" action="{% url 'logout' %}" style="display: inline;">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" class="btn-v">Выйти</button>
+          </form>
+      {% else %}
+          <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+          <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+      {% endif %}
     </div>
 
   <a href="{% url 'teachers_list' %}" class="back-button">← Назад к списку репетиторов</a>
@@ -252,7 +169,7 @@
       </div>
 
         {% if user.is_authenticated %}
-            <button id="show-contacts-btn" class="btn">📞 Показать контакты для записи</button>
+            <button id="show-contacts-btn" class="btn-v">📞 Показать контакты для записи</button>
 
             <div id="contacts-block">
                 <h3 class="section-title">
@@ -275,7 +192,7 @@
                 или 
                 <a href="{% url 'register' %}" style="color: #2D5BFF;">зарегистрируйтесь</a>.
             </p>
-            <a href="{% url 'login' %}?next={{ request.path }}" class="btn">🔒 Войти, чтобы записаться</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">🔒 Войти, чтобы записаться</a>
         {% endif %}
 
       <script>

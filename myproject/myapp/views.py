@@ -4,6 +4,12 @@ from .models import Teacher
 from django.views.generic import DetailView, ListView, View, CreateView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def logout_view(request):
+    logout(request)
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 class TeachersListViews(ListView):
@@ -16,10 +22,6 @@ class TeachersDetailsView(DetailView):
 	template_name = "teachers/teacher_details.html"
 	context_object_name = "teacher"
 	
-	# def dispatch(self, request, *args, **kwargs):
-	# 	if not request.user.is_authenticated:
-	# 		return redirect('login')
-	# 	return super().dispatch(request, *args, **kwargs)
 
 class TeacherFormView(CreateView):
 	model = Teacher

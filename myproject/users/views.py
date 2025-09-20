@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.views import View
+from django.contrib.auth import logout
 
 def register(request):
     if request.method == 'POST':

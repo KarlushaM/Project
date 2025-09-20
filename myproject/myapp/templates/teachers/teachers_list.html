@@ -1,17 +1,14 @@
+{% load static %}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список репетиторов</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <style>
-        body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #e8ecf7; /* мягкий фон */
-        color: #2D3748; /* основной текст */
-        margin: 0;
-        padding: 20px;
-        }
 
         h1 {
         text-align: center;
@@ -67,7 +64,6 @@
         display: inline-block;
         }
 
-
         .teacher-card:hover .teacher-name {
         border-bottom-color: #2D5BFF; /* яркий акцент при наведении */
         }
@@ -84,74 +80,20 @@
         color: #4A5568; 
         }
 
-
-        .cta-button {
-        background-color: #2D5BFF;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: background-color 0.2s;
-        }
-
-        .cta-button:hover {
-        background-color: #1d4edb;
-        }
-
-        .btn-outline {
-        display: inline-block;
-        padding: 10px 16px;
-        margin: 4px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #007bff;
-        text-decoration: none;
-        border: 2px solid #007bff;
-        border-radius: 8px;
-        background: none;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-outline:hover {
-        background-color: #e3f2fd;
-        transform: translateY(-1px);
-        border-color: #0056b3;
-        }
-
-        .btn {
-        display: inline-block;
-        background-color: #2D5BFF;
-        color: white;
-        padding: 12px 24px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 500;
-        transition: background-color 0.2s;
-        margin-top: 10px;
-        }
-
-        .btn:hover {
-        background-color: #1d4edb;
-        transform: translateY(-1px);
-        }
     
   </style>
 </head>
 <body>
     <div style ="text-align: right;">
         {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}">
+            <form method="post" action="{% url 'logout' %}" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn">Выйти</button>
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit" class="btn-v">Выйти</button>
             </form>
         {% else %}
             <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-            <a href="{% url 'login' %}" class="btn">Войти</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
         {% endif %}
     </div>
     

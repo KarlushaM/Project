@@ -125,6 +125,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = reverse_lazy('teachers_list')
-LOGOUT_REDIRECT_URL = reverse_lazy('teachers_list')
+LOGIN_URL = '/login/'
+# LOGIN_REDIRECT_URL = reverse_lazy('teachers_list')
+# LOGOUT_REDIRECT_URL = reverse_lazy('teachers_list')
