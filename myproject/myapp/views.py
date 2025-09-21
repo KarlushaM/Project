@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Teacher
+from .models import Teacher, Subjects, Klass
 from django.views.generic import DetailView, ListView, View, CreateView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
@@ -16,6 +16,12 @@ class TeachersListViews(ListView):
 	model = Teacher
 	template_name = "teachers/teachers_list.html"
 	context_object_name = "teachers"
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['subjects'] = Subjects.objects.all()
+		context['klasses'] = Klass.objects.all()
+		return context
 
 class TeachersDetailsView(DetailView):
 	model = Teacher

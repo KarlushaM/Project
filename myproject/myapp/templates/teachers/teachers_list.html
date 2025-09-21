@@ -9,8 +9,6 @@
     <title>Список репетиторов</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <style>
-
-
         
         .teacher-header {
         display: flex;
@@ -80,8 +78,42 @@
             <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
         {% endif %}
     </div>
-    
+            
+
     <h1>Список репетиторов</h1>
+
+        <div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+            <div class="dropdown">
+                <button class="dropdown-btn">Предметы ▼</button>
+                <div class="dropdown-content">
+                    {% for subject in subjects %}
+                        <label>
+                            <input type="checkbox" data-filter="subject" value="{{ subject.name }}">
+                            {{ subject.name }}
+                        </label><br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropdown-btn">Классы ▼</button>
+                <div class="dropdown-content">
+                    {% for klass in klasses %}
+                        <label>
+                            <input type="checkbox" data-filter="klass" value="{{ klass.name }}">
+                            {{ klass.name}}
+                        </label><br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <button id="filter-btn" class="btn-outline">Показать</button>
+        </div>
+
+        <div id="no-results" style="display: none; margin: 30px 0; padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; text-align: center; color: #856404; font-weight: 500;">
+        🔍 Совпадений не найдено. Попробуйте изменить фильтры.
+        </div>
+
         {% for teacher in teachers %}
             <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
             <div class="teacher-header">
@@ -97,6 +129,87 @@
             <p class="price">Цена: {{ teacher.price }}</p>
             </a>
         {% endfor %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterBtn = document.getElementById('filter-btn');
+                const teachersList = document.getElementById('teachers-list');
+                const noResults = document.getElementById('no-results');
 
-</body>
+                const teacherCards = Array.from(document.querySelectorAll('.teacher-card'));
+
+                function filterTeachers() {
+                    const selectedSubjects = Array.from(document.querySelectorAll('input[data-filter="subject"]:checked')).map(cb => cb.value.trim());
+                    const selectedClasses = Array.from(document.querySelectorAll('input[data-filter="klass"]:checked')).map(cb => cb.value.trim());
+
+                    teacherCards.forEach(card => {
+                        let subjectsText = [];
+                        let classesText = [];
+
+                        // --- Извлекаем предметы ---
+                        const subjectParagraph = card.querySelector('p');
+                        if (subjectParagraph) {
+                            const text = subjectParagraph.textContent.trim();
+                            if (text.startsWith('Предметы:')) {
+                                const parts = text.split(': ');
+                                if (parts.length > 1) {
+                                    subjectsText = parts[1].split(',').map(s => s.trim());
+                                }
+                            }
+                        }
+
+                        // --- Извлекаем классы ---
+                        const classParagraphs = card.querySelectorAll('p');
+                        for (let p of classParagraphs) {
+                            const text = p.textContent.trim();
+                            if (text.startsWith('Классы:')) {
+                                const parts = text.split(': ');
+                                if (parts.length > 1) {
+                                    classesText = parts[1].split(',').map(c => c.trim());
+                                    break;
+                                }
+                            }
+                        }
+
+                        // --- Отладка ---
+                        console.log('---');
+                        console.log('Репетитор:', card.querySelector('h3')?.textContent);
+                        console.log('Предметы в карточке:', subjectsText);
+                        console.log('Классы в карточке:', classesText);
+                        console.log('Выбранные предметы:', selectedSubjects);
+                        console.log('Выбранные классы:', selectedClasses);
+
+                        const hasSubject = selectedSubjects.length === 0 || selectedSubjects.some(s => subjectsText.includes(s));
+                        const hasClass = selectedClasses.length === 0 || selectedClasses.some(c => classesText.includes(c));
+
+                        console.log('hasSubject:', hasSubject, 'hasClass:', hasClass);
+
+                        if (hasSubject && hasClass) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Показываем/скрываем сообщение "Совпадений не найдено"
+                    const visibleCards = teacherCards.filter(card => card.style.display !== 'none');
+                    if (visibleCards.length === 0) {
+                        noResults.style.display = 'block';
+                    } else {
+                        noResults.style.display = 'none';
+                    }
+                }
+
+                if (filterBtn) {
+                    filterBtn.addEventListener('click', filterTeachers);
+                }
+
+                document.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        filterTeachers();
+                    }
+                });
+            });
+        </script>
+
+    </body>
 </html>
