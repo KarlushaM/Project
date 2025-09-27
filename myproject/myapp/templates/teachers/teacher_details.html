@@ -1,5 +1,5 @@
 {% load static %}
-
+{% load rating_tags %}
 
 
 <!DOCTYPE html>
@@ -97,6 +97,60 @@
         border: 1px solid #e2e8f0;
         transition: all 0.3s ease;
     }
+    .review-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+}
+
+    .review-card strong {
+        color: #2d3748;
+        font-weight: 600;
+}
+
+    .review-card small {
+        color: #6c757d;
+        font-size: 12px;
+}
+
+    .star-rating {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+        text-align: left; /* ← Контейнер выровнен по левому краю */
+        display: inline-block; /* или block */
+    }
+
+    .star-rating .star {
+        display: inline-block;
+        padding: 0 2px;
+        transition: color 0.2s;
+    }
+
+    .star-rating .star:hover,
+    .star-rating .star:hover ~ .star,
+    .star-rating.selected .star.active,
+    .star-rating.selected .star.active ~ .star {
+        color: #FFD700;
+    }
+    .user-rating {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 16px;
+        line-height: 1;
+}
+
+    .user-rating .star {
+        color: #ddd; /* серый */
+}
+
+    .user-rating .star.full {
+        color: #FFD700; /* жёлтый */
+}
 
   </style>
 
@@ -187,7 +241,96 @@
             </p>
             <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">🔒 Войти, чтобы записаться</a>
         {% endif %}
+    </div>
+    <!-- Блок с отзывами -->
+    <div style="margin-top: 40px; padding: 20px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+        <h3 class="section-title">⭐️ Отзывы</h3>
 
+        {% if user.is_authenticated %}
+            <!-- Форма отзыва -->
+            <form method="post" style="margin-bottom: 20px;">
+              {% csrf_token %}
+              {{ form.text }}
+              
+              <!-- Звёздочки -->
+              <div style="margin: 15px 0;">
+                  <label>Ваша оценка:</label><br>
+                  <div class="star-rating" data-rating="0">
+                      <span class="star" data-value="1">★</span>
+                      <span class="star" data-value="2">★</span>
+                      <span class="star" data-value="3">★</span>
+                      <span class="star" data-value="4">★</span>
+                      <span class="star" data-value="5">★</span>
+                  </div>
+                  {{ form.rating }} <!-- скрытое поле -->
+              </div>
+
+              <button type="submit" class="btn-v">Оставить отзыв</button>
+            </form>
+        {% else %}
+            <p style="color: #e53e3e; font-weight: 500;">
+                🔐 Чтобы оставить отзыв — 
+                <a href="{% url 'login' %}?next={{ request.path }}" style="color: #2D5BFF;">войдите</a>.
+            </p>
+        {% endif %}
+
+        <!-- Список отзывов -->
+        {% if reviews %}
+        <div style="margin-top: 20px;">
+            {% for review in reviews %}
+              <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                <strong>{{ review.user.username }}</strong>{% render_rating_stars review.rating %}
+                <p style="margin: 10px 0;">{{ review.text }}</p>
+                <small style="color: #6c757d;">{{ review.created_at|date:"d.m.Y H:i" }}</small>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <p style="color: #6c757d; font-style: italic;">Пока нет отзывов.</p>
+        {% endif %}
+    </div>
+  </div>
+    
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          const starRating = document.querySelector('.star-rating');
+          const hiddenInput = document.querySelector('#id_rating'); // ID скрытого поля
+
+          if (!starRating || !hiddenInput) return;
+
+          const stars = starRating.querySelectorAll('.star');
+
+          stars.forEach(star => {
+              star.addEventListener('click', function() {
+                  const value = this.getAttribute('data-value');
+                  hiddenInput.value = value;
+
+                  // Убираем все активные классы
+                  stars.forEach(s => s.classList.remove('active'));
+                  // Добавляем активный класс до выбранной звезды
+                  for (let i = 0; i < value; i++) {
+                      stars[i].classList.add('active');
+                  }
+                  starRating.classList.add('selected');
+              });
+
+              star.addEventListener('mouseenter', function() {
+                  const value = this.getAttribute('data-value');
+                  stars.forEach(s => s.classList.remove('hover'));
+                  for (let i = 0; i < value; i++) {
+                      stars[i].classList.add('hover');
+                  }
+              });
+          });
+
+          starRating.addEventListener('mouseleave', function() {
+              if (!starRating.classList.contains('selected')) {
+                  stars.forEach(s => s.classList.remove('hover'));
+                  }
+              });
+          });
+      </script>
       <script>
         document.addEventListener('DOMContentLoaded', function() {
         const button = document.getElementById('show-contacts-btn');
@@ -209,9 +352,5 @@
           });
         });
       </script>
-  
-   
-    </div>
-  </div>
 </body>
 </html>

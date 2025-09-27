@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Subjects(models.Model):
 	name = models.CharField("Учебный предмет", max_length = 50)
@@ -44,3 +45,14 @@ class Teacher(models.Model):
 	@property
 	def klass_list(self):
 		return ", ".join(map(str, self.klass.all()))
+
+
+class Review(models.Model):
+    teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField(verbose_name="Отзыв")
+    rating = models.IntegerField(verbose_name="Оценка", choices=[(i, i) for i in range(1, 6)])
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} — {self.teacher.fio}"

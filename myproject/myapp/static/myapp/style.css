@@ -185,3 +185,18 @@ h1 {
         margin-left: 5px;
 }
 
+
+.user-rating {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 16px;
+        line-height: 1;
+}
+
+.user-rating .star {
+        color: #ddd; /* серый */
+}
+
+.user-rating .star.full {
+        color: #FFD700; /* жёлтый */
+}
