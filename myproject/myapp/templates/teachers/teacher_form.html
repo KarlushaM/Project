@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Сойдание объявления</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <style>
 
         .form-container {
@@ -37,20 +38,9 @@
     </style>
 </head>
 <body>
-    <div style ="text-align: right;">
-        {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{ request.path }}">
-                <button type="submit" class="btn-v">Выйти</button>
-            </form>
-        {% else %}
-            <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
-        {% endif %}
-    </div>
-    <a href="{% url 'teachers_list' %}" class="back-button">
-        ← Назад к списку репетиторов
+
+    <a href="{% url 'my_ads' %}" class="back-button">
+        ← Назад к списку объявлений
     </a>
     
     <h1>Сойдай своё объявление</h1>
@@ -61,5 +51,33 @@
             <button type="submit" class="btn-v">Создать</button>
         </form>
     </div>
+
+      <footer class="site-footer">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <h3>ProMozgi</h3>
+            <p>Найди репетитора, который вдохновляет</p>
+          </div>
+
+          <div class="footer-contacts">
+            <p>📧 promozgi@mail.ru</p>
+            <p>📞 +375 (29) 777 77 77</p>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social-link">Telegram</a>
+            <a href="#" class="social-link">VK</a>
+            <a href="#" class="social-link">WhatsApp</a>
+          </div>
+
+          <div class="footer-legal">
+            <p>© 2025 ProMozgi. Все права защищены.</p>
+            <p>
+              <a href="/privacy/">Политика конфиденциальности</a> | 
+              <a href="/terms/">Пользовательское соглашение</a>
+            </p>
+          </div>
+        </div>
+      </footer>
 </body>
 </html>

@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.views import View
 from django.contrib.auth import logout
 
+
+
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -25,5 +27,8 @@ class ForceLogoutView(View):
     def get(self, request):
         logout(request)
         return redirect('teacher_list')
+    
+
+
 
 

@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> {{ teacher.fio}}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <style>
 
     .container {
@@ -103,17 +104,17 @@
         box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         padding: 30px;
         margin-bottom: 30px;
-}
+    }
 
     .review-card strong {
         color: #2d3748;
         font-weight: 600;
-}
+    }
 
     .review-card small {
         color: #6c757d;
         font-size: 12px;
-}
+    }
 
     .star-rating {
         direction: rtl;
@@ -142,15 +143,32 @@
         margin-left: 8px;
         font-size: 16px;
         line-height: 1;
-}
+    }
 
     .user-rating .star {
         color: #ddd; /* серый */
-}
+    }
 
     .user-rating .star.full {
         color: #FFD700; /* жёлтый */
-}
+    }
+
+    .teacher-rating {
+        display: flex;
+        align-items: center;
+        gap: 6px; /* отступ между звездой и цифрой */
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .teacher-rating .star {
+        color: #FFD700;
+        font-size: 18px;
+    }
+
+    .teacher-rating .rating-value {
+        color: #aaa;
+    }
 
   </style>
 
@@ -180,7 +198,19 @@
           {% else %}
               <div class="avatar-placeholder-large">{{ teacher.fio|first }}</div>
           {% endif %}
-        <h1 class="teacher-name">{{ teacher.fio }}</h1>
+          <h1 class="teacher-name">{{ teacher.fio }}</h1>
+            {% if teacher.average_rating > 0 %}
+              <div class="teacher-rating">
+                <h1>   </h1>
+                <span class="rating-value">{{ teacher.average_rating }}</span>
+                <span class="star">★</span>
+              </div>
+            {% else %}
+              <div class="teacher-rating">
+                <h1>   </h1>
+                <span class="rating-value">Нет отзывов</span>
+              </div>
+            {% endif %}
       </div>
 
       <div class="section">
@@ -352,5 +382,33 @@
           });
         });
       </script>
+      
+      <footer class="site-footer">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <h3>ProMozgi</h3>
+            <p>Найди репетитора, который вдохновляет</p>
+          </div>
+
+          <div class="footer-contacts">
+            <p>📧 promozgi@mail.ru</p>
+            <p>📞 +375 (29) 777 77 77</p>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social-link">Telegram</a>
+            <a href="#" class="social-link">VK</a>
+            <a href="#" class="social-link">WhatsApp</a>
+          </div>
+
+          <div class="footer-legal">
+            <p>© 2025 ProMozgi. Все права защищены.</p>
+            <p>
+              <a href="/privacy/">Политика конфиденциальности</a> | 
+              <a href="/terms/">Пользовательское соглашение</a>
+            </p>
+          </div>
+        </div>
+      </footer>
 </body>
 </html>

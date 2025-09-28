@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Subjects(models.Model):
 	name = models.CharField("Учебный предмет", max_length = 50)
 	
@@ -21,7 +22,7 @@ class Klass(models.Model):
 		
 
 class Teacher(models.Model):
-
+	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
 	photo = models.ImageField(upload_to='teachers_photos/', blank=True, null=True, verbose_name="Фото")
 	fio = models.CharField("ФИО", max_length=50)
 	description = models.TextField("Onиcaниe", null=True, blank=True)
@@ -30,6 +31,12 @@ class Teacher(models.Model):
 	klass = models.ManyToManyField(Klass, verbose_name= "Класс")
 	phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
 
+	def average_rating(self):
+		reviews = self.reviews.all()  # предполагается, что related_name='reviews'
+		if not reviews:
+			return 0
+		avg = sum(review.rating for review in reviews) / len(reviews)
+		return round(avg, 1)
 
 	def __str__(self):
 		return f"{self.fio}, {self.subjects_list}"

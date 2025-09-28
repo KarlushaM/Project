@@ -6,60 +6,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список репетиторов</title>
+    <title>ProMozgi</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/teacher_list.css' %}">
     <style>
-        
-        .teacher-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 25px;
-        }
-
-        .teacher-card {
-        display: block;
-        margin: 0 auto;
-        max-width: 800px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        padding: 20px;
-        margin-bottom: 20px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        text-decoration: none;
-        color: inherit;
-        }
-
-        .teacher-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        cursor: pointer;
-        }
-
-
-        .teacher-name {
-        margin-top: 0;
-        color: #2D3748;
-        border-bottom: 2px solid transparent;
-        transition: border-color 0.2s ease;
-        display: inline-block;
-        }
-
-        .teacher-card:hover .teacher-name {
-        border-bottom-color: #2D5BFF; /* яркий акцент при наведении */
-        }
-
-        .subjects, .klass, .price {
-        font-size: 0.9em;
-        color: #718096; /* вторичный текст */
-        margin: 5px 0;
-        }
-
-        .description {
-        margin: 10px 0;
-        line-height: 1.5;
-        color: #4A5568; 
-        }
+ 
 
     
   </style>
@@ -70,8 +22,10 @@
         {% if user.is_authenticated %}
             <form method="post" action="{% url 'logout' %}" style="display: inline;">
                 {% csrf_token %}
+                <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
                 <input type="hidden" name="next" value="{{ request.path }}">
                 <button type="submit" class="btn-v">Выйти</button>
+
             </form>
         {% else %}
             <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
@@ -129,6 +83,7 @@
             <p class="price">Цена: {{ teacher.price }}</p>
             </a>
         {% endfor %}
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const filterBtn = document.getElementById('filter-btn');
@@ -211,5 +166,32 @@
             });
         </script>
 
+      <footer class="site-footer">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <h3>ProMozgi</h3>
+            <p>Найди репетитора, который вдохновляет</p>
+          </div>
+
+          <div class="footer-contacts">
+            <p>📧 promozgi@mail.ru</p>
+            <p>📞 +375 (29) 777 77 77</p>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social-link">Telegram</a>
+            <a href="#" class="social-link">VK</a>
+            <a href="#" class="social-link">WhatsApp</a>
+          </div>
+
+          <div class="footer-legal">
+            <p>© 2025 ProMozgi. Все права защищены.</p>
+            <p>
+              <a href="/privacy/">Политика конфиденциальности</a> | 
+              <a href="/terms/">Пользовательское соглашение</a>
+            </p>
+          </div>
+        </div>
+      </footer>
     </body>
 </html>

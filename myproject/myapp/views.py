@@ -7,6 +7,13 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from .forms import ReviewForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+@login_required
+def my_ads_view(request):
+    ads = Teacher.objects.filter(user=request.user)
+    return render(request, 'teachers/my_ads.html', {'ads': ads})
 
 def logout_view(request):
     logout(request)
@@ -56,12 +63,33 @@ class TeachersDetailsView(DetailView):
 			return render(request, self.template_name, context)
 	
 
-class TeacherFormView(CreateView):
-	model = Teacher
-	fields = "__all__"
-	template_name ='teachers/teacher_form.html'
-	def get_success_url(self):
-		return reverse("teacher_details", kwargs={"pk":self.object.pk})
-	
+class TeacherFormView(LoginRequiredMixin, CreateView):
+    model = Teacher
+    fields = ('fio', 'photo', 'description', 'price', 'subjects', 'klass', 'phone',)
+    template_name = 'teachers/teacher_form.html'
 
+    def form_valid(self, form):
+        # Привязываем текущего пользователя к объявлению
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Перенаправляем на страницу "Мои объявления"
+        return reverse_lazy('my_ads')
+	
+class MyAdsView(LoginRequiredMixin, ListView):
+    model = Teacher
+    template_name = 'teachers/my_ads.html'
+    context_object_name = 'teachers'
+
+    def get_queryset(self):
+        return Teacher.objects.filter(user=self.request.user)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subjects'] = Subjects.objects.all()
+        context['klasses'] = Klass.objects.all()
+        return context
+    
 

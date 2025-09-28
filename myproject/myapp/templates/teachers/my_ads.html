@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои объявления</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/teacher_list.css' %}">
+</head>
+<body>
+
+    <a href="{% url 'teachers_list' %}" class="back-button">← Назад к списку репетиторов</a>
+
+    <h1>Мои объявления</h1>
+    <!-- Для отладки -->
+<p style="color: red;">Количество объявлений: {{ teachers|length }}</p>
+<pre>
+{{ teachers }}
+</pre>
+    {% if teachers %}
+            {% for teacher in teachers %}
+            <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
+            <div class="teacher-header">
+            {% if teacher.photo %}
+                <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
+            {% else %}
+                <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
+            {% endif %}
+                <h1 class="teacher-name">{{ teacher.fio }}</h1>
+            </div>
+            <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+            <p class="klass">Классы: {{ teacher.klass_list }}</p>
+            <p class="price">Цена: {{ teacher.price }}</p>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
+    {% endif %}
+        <p style ="text-align: center;">
+            <a href="{% url 'create_teacher' %}" class="btn-outline">Создать объявление</a>
+        </p>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-card">
+          <div class="footer-brand">
+            <h3>ProMozgi</h3>
+            <p>Найди репетитора, который вдохновляет</p>
+          </div>
+
+          <div class="footer-contacts">
+            <p>📧 promozgi@mail.ru</p>
+            <p>📞 +375 (29) 777 77 77</p>
+          </div>
+
+          <div class="footer-social">
+            <a href="#" class="social-link">Telegram</a>
+            <a href="#" class="social-link">VK</a>
+            <a href="#" class="social-link">WhatsApp</a>
+          </div>
+
+          <div class="footer-legal">
+            <p>© 2025 ProMozgi. Все права защищены.</p>
+            <p>
+              <a href="/privacy/">Политика конфиденциальности</a> | 
+              <a href="/terms/">Пользовательское соглашение</a>
+            </p>
+          </div>
+        </div>
+    </footer>
+</body>
+</html>
