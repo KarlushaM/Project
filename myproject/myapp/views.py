@@ -7,13 +7,8 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from .forms import ReviewForm
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-@login_required
-def my_ads_view(request):
-    ads = Teacher.objects.filter(user=request.user)
-    return render(request, 'teachers/my_ads.html', {'ads': ads})
 
 def logout_view(request):
     logout(request)
@@ -85,11 +80,11 @@ class MyAdsView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return Teacher.objects.filter(user=self.request.user)
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['subjects'] = Subjects.objects.all()
         context['klasses'] = Klass.objects.all()
+        print(context)
         return context
     
 

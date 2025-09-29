@@ -49,3 +49,20 @@
         line-height: 1.5;
         color: #4A5568; 
         }
+
+        .teacher-rating {
+        display: flex;
+        align-items: center;
+        gap: 6px; /* отступ между звездой и цифрой */
+        font-size: 14px;
+        color: #aaa;
+        }
+
+        .teacher-rating .star {
+        color: #FFD700;
+        font-size: 18px;
+        }
+
+        .teacher-rating .rating-value {
+        color: #aaa;
+        }

@@ -10,10 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/teacher_list.css' %}">
-    <style>
- 
-
-    
+    <style>    
   </style>
 </head>
 <body>
@@ -81,6 +78,17 @@
             <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
             <p class="klass">Классы: {{ teacher.klass_list }}</p>
             <p class="price">Цена: {{ teacher.price }}</p>
+            {% if teacher.average_rating > 0 %}
+                <div class="teacher-rating">
+                    <span class="rating-value">{{ teacher.average_rating }}</span>
+                    <span class="star">★</span>
+                </div>
+            {% else %}
+                <div class="teacher-rating">
+                    <h1>   </h1>
+                    <span class="rating-value">Нет отзывов</span>
+                </div>
+            {% endif %}
             </a>
         {% endfor %}
 

@@ -22,7 +22,7 @@ class Klass(models.Model):
 		
 
 class Teacher(models.Model):
-	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь")
+	user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Пользователь", related_name="teachers")
 	photo = models.ImageField(upload_to='teachers_photos/', blank=True, null=True, verbose_name="Фото")
 	fio = models.CharField("ФИО", max_length=50)
 	description = models.TextField("Onиcaниe", null=True, blank=True)
