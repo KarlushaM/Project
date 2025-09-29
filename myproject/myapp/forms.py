@@ -11,5 +11,5 @@ class ReviewForm(forms.ModelForm):
                 'placeholder': 'Напишите ваш отзыв...',
                 'class': 'form-control'
             }),
-            'rating': forms.HiddenInput(),  # Скроем оригинальное поле
+            'rating': forms.HiddenInput(),  
         }
