@@ -9,13 +9,37 @@
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/teacher_list.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
 </head>
 <body>
+ <header class="site-header">
+    <div class="header-card">
+        <!-- Логотип по центру -->
+        <div class="header-logo">
+        <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
+        </div>
+        <div class="header-controls">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
+                    <button type="submit" class="btn-v">Выйти</button>
 
+                </form>
+            {% else %}
+                <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+            {% endif %}
+            </div>
+
+    </div>
+    </header>      
     <a href="{% url 'teachers_list' %}" class="back-button">← Назад к списку репетиторов</a>
 
     <h1>Мои объявления</h1>
-
+        <p style ="text-align: center;">
+            <a href="{% url 'create_teacher' %}" class="btn-outline">Создать объявление</a>
+        </p>
     {% if teachers %}
             {% for teacher in teachers %}
             <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
@@ -46,15 +70,12 @@
     {% else %}
         <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
     {% endif %}
-        <p style ="text-align: center;">
-            <a href="{% url 'create_teacher' %}" class="btn-outline">Создать объявление</a>
-        </p>
     </div>
 
     <footer class="site-footer">
         <div class="footer-card">
           <div class="footer-brand">
-            <h3>ProMozgi</h3>
+            <img src="{% static 'myapp/images/logo_footer.png' %}" alt="Логотип" class="footer-logo">
             <p>Найди репетитора, который вдохновляет</p>
           </div>
 

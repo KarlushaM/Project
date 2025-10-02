@@ -1,27 +1,15 @@
-.site-footer {
-  background-color: #F0F3FA; /* как фон страницы */
-  padding: 40px 20px;
-  margin-top: 60px;
-}
-
 .footer-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 30px;
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: auto;
+  margin-top: 80px;
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: #6c757d;
 }
 
-.footer-brand h3 {
-  margin: 0 0 8px;
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
-}
 
 .footer-brand p {
   margin: 0 0 20px;
@@ -79,4 +67,11 @@
 .footer-legal a:hover {
   color: #0D6EFD;
   text-decoration: underline;
+}
+
+.footer-logo {
+  max-width: 120px;       /* ограничим ширину */
+  height: auto;           /* сохраним пропорции */
+  display: block;
+  margin: 0 auto 0px;
 }

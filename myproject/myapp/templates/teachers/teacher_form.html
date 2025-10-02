@@ -8,6 +8,7 @@
     <title>Сойдание объявления</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
+      <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
     <style>
 
         .form-container {
@@ -38,6 +39,30 @@
     </style>
 </head>
 <body>
+      <header class="site-header">
+    <div class="header-card">
+        <!-- Логотип по центру -->
+        <div class="header-logo">
+        <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
+        </div>
+        <div class="header-controls">
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
+                    <button type="submit" class="btn-v">Выйти</button>
+                </form>
+            {% else %}
+                <div style="display: inline;">
+                <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+                </div>
+            {% endif %}
+            </div>
+
+    </div>
+    </header>      
+
 
     <a href="{% url 'my_ads' %}" class="back-button">
         ← Назад к списку объявлений
@@ -55,7 +80,7 @@
       <footer class="site-footer">
         <div class="footer-card">
           <div class="footer-brand">
-            <h3>ProMozgi</h3>
+            <img src="{% static 'myapp/images/logo_footer.png' %}" alt="Логотип" class="footer-logo">
             <p>Найди репетитора, который вдохновляет</p>
           </div>
 
