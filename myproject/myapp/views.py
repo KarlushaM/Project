@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.shortcuts import redirect
-from .forms import ReviewForm
+from .forms import ReviewForm, TeacherForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
@@ -60,17 +60,26 @@ class TeachersDetailsView(DetailView):
 
 class TeacherFormView(LoginRequiredMixin, CreateView):
     model = Teacher
-    fields = ('fio', 'photo', 'description', 'price', 'subjects', 'klass', 'phone',)
+    form_class = TeacherForm
     template_name = 'teachers/teacher_form.html'
 
     def form_valid(self, form):
-        # Привязываем текущего пользователя к объявлению
+        # Устанавливаем пользователя ДО сохранения
         form.instance.user = self.request.user
+        # Создаем объект и сохраняем ManyToMany поля автоматически
         return super().form_valid(form)
 
+
     def get_success_url(self):
-        # Перенаправляем на страницу "Мои объявления"
         return reverse_lazy('my_ads')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subjects'] = Subjects.objects.all()
+        context['klasses'] = Klass.objects.all()
+        return context
+		
+
 	
 class MyAdsView(LoginRequiredMixin, ListView):
     model = Teacher
