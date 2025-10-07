@@ -8,8 +8,8 @@
     <title>Мои объявления</title>
     <link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
-    <link rel="stylesheet" href="{% static 'myapp/teacher_list.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/my_ads.css' %}">
 </head>
 <body>
  <header class="site-header">
@@ -40,37 +40,253 @@
         <p style ="text-align: center;">
             <a href="{% url 'create_teacher' %}" class="btn-outline">Создать объявление</a>
         </p>
-    {% if teachers %}
-            {% for teacher in teachers %}
-            <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
-            <div class="teacher-header">
-                {% if teacher.photo %}
-                    <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
-                {% else %}
-                    <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
-                {% endif %}
-                    <h1 class="teacher-name">{{ teacher.fio }}</h1>
-                </div>
-                <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
-                <p class="klass">Классы: {{ teacher.klass_list }}</p>
-                <p class="price">Цена: {{ teacher.price }}</p>
-                {% if teacher.average_rating > 0 %}
-                <div class="teacher-rating">
-                    <span class="rating-value">{{ teacher.average_rating }}</span>
-                    <span class="star">★</span>
-                </div>
-                {% else %}
-                    <div class="teacher-rating">
-                        <h1>   </h1>
-                        <span class="rating-value">Нет отзывов</span>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="active">Активные</button>
+            <button class="tab-button" data-tab="hidden">Скрытые</button>
+            <button class="tab-button" data-tab="moderation">На модерации</button>
+        </div>
+        
+        <!-- Контент вкладок -->
+        <div id="active" class="tab-content active">
+            {% if teachers %}
+                {% for teacher in teachers %}
+                {% if teacher.status == 'active' %}
+                <div class="teacher-card" data-teacher-id="{{ teacher.id }}" data-status="active">
+                    <a href="{% url 'teacher_details' teacher.id %}" class="teacher-link">
+                        <div class="teacher-header">
+                            {% if teacher.photo %}
+                                <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
+                            {% else %}
+                                <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
+                            {% endif %}
+                            <h1 class="teacher-name">{{ teacher.fio }}</h1>
+                        </div>
+                        <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+                        <p class="klass">Классы: {{ teacher.klass_list }}</p>
+                        <p class="price">Цена: {{ teacher.price }}</p>
+                        {% if teacher.average_rating > 0 %}
+                        <div class="teacher-rating">
+                            <span class="rating-value">{{ teacher.average_rating }}</span>
+                            <span class="star">★</span>
+                        </div>
+                        {% else %}
+                            <div class="teacher-rating">
+                                <span class="rating-value">Нет отзывов</span>
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-actions">
+                        <button class="action-btn hide-btn" data-teacher-id="{{ teacher.id }}">Скрыть</button>
+                        <button class="action-btn delete-btn" data-teacher-id="{{ teacher.id }}">Удалить</button>
                     </div>
+                </div>
                 {% endif %}
-                </a>
-            {% endfor %}
-    {% else %}
-        <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
-    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
+            {% endif %}
+
+        </div>
+
+        <div id="hidden" class="tab-content">
+            {% if teachers %}
+            {% for teacher in teachers %}
+            {% if teacher.status == 'hidden' %}
+            <div class="teacher-card" data-teacher-id="{{ teacher.id }}" data-status="hidden">
+                <a href="{% url 'teacher_details' teacher.id %}" class="teacher-link">
+                        <div class="teacher-header">
+                            {% if teacher.photo %}
+                                <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
+                            {% else %}
+                                <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
+                            {% endif %}
+                            <h1 class="teacher-name">{{ teacher.fio }}</h1>
+                        </div>
+                        <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+                        <p class="klass">Классы: {{ teacher.klass_list }}</p>
+                        <p class="price">Цена: {{ teacher.price }}</p>
+                        {% if teacher.average_rating > 0 %}
+                        <div class="teacher-rating">
+                            <span class="rating-value">{{ teacher.average_rating }}</span>
+                            <span class="star">★</span>
+                        </div>
+                        {% else %}
+                            <div class="teacher-rating">
+                                <span class="rating-value">Нет отзывов</span>
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-actions">
+                        <button class="action-btn restore-btn" data-teacher-id="{{ teacher.id }}">Восстановить</button>
+                        <button class="action-btn delete-btn" data-teacher-id="{{ teacher.id }}">Удалить</button>
+                    </div>
+            </div>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+                <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
+            {% endif %}
+        </div>
+
+        <div id="moderation" class="tab-content">
+            {% if teachers %}
+            {% for teacher in teachers %}
+            {% if teacher.status == 'moderation' %}
+            <div class="teacher-card">
+                <a href="{% url 'teacher_details' teacher.id %}" class="teacher-link">
+                        <div class="teacher-header">
+                            {% if teacher.photo %}
+                                <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
+                            {% else %}
+                                <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
+                            {% endif %}
+                            <h1 class="teacher-name">{{ teacher.fio }}</h1>
+                        </div>
+                        <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+                        <p class="klass">Классы: {{ teacher.klass_list }}</p>
+                        <p class="price">Цена: {{ teacher.price }}</p>
+                        {% if teacher.average_rating > 0 %}
+                        <div class="teacher-rating">
+                            <span class="rating-value">{{ teacher.average_rating }}</span>
+                            <span class="star">★</span>
+                        </div>
+                        {% else %}
+                            <div class="teacher-rating">
+                                <span class="rating-value">Нет отзывов</span>
+                            </div>
+                        {% endif %}
+                    </a>
+            </div>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+                <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
+            {% endif %}
+        </div>
+        
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. СКРИПТ ДЛЯ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Убираем активный класс у всех кнопок
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                // Добавляем активный класс текущей кнопке
+                this.classList.add('active');
+                
+                // Скрываем все контенты
+                tabContents.forEach(content => content.classList.remove('active'));
+                // Показываем контент текущей вкладки
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // 2. СКРИПТ ДЛЯ КНОПОК УПРАВЛЕНИЯ ОБЪЯВЛЕНИЯМИ
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('hide-btn')) {
+                const teacherId = e.target.getAttribute('data-teacher-id');
+                changeTeacherStatus(teacherId, 'hidden');
+            }
+            
+            if (e.target.classList.contains('delete-btn')) {
+                const teacherId = e.target.getAttribute('data-teacher-id');
+                deleteTeacher(teacherId);
+            }
+            
+            if (e.target.classList.contains('restore-btn')) {
+                const teacherId = e.target.getAttribute('data-teacher-id');
+                changeTeacherStatus(teacherId, 'active');
+            }
+        });
+        
+        // 3. ФУНКЦИИ ДЛЯ AJAX-ЗАПРОСОВ
+        function changeTeacherStatus(teacherId, newStatus) {
+            let message = '';
+            if (newStatus === 'hidden') {
+                message = 'Вы уверены, что хотите скрыть это объявление?';
+            } else if (newStatus === 'active') {
+                message = 'Вы уверены, что хотите восстановить это объявление?';
+            }
+            
+            if (message && !confirm(message)) {
+                return;
+            }
+            
+            fetch(`/teacher/${teacherId}/status/${newStatus}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Перезагружаем страницу для обновления всех вкладок
+                    location.reload();
+                } else {
+                    alert('Ошибка при изменении статуса: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при изменении статуса');
+            });
+        }
+        
+        function deleteTeacher(teacherId) {
+            if (!confirm('Вы уверены, что хотите удалить это объявление?')) {
+                return;
+            }
+            
+            fetch(`/teacher/${teacherId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Перезагружаем страницу для обновления всех вкладок
+                    location.reload();
+                } else {
+                    alert('Ошибка при удалении объявления');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при удалении объявления');
+            });
+        }
+        
+        // Функция для получения CSRF токена из cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+    </script>
 
     <footer class="site-footer">
         <div class="footer-card">

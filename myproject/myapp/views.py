@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import Teacher, Subjects, Klass
 from django.views.generic import DetailView, ListView, View, CreateView
 from django.urls import reverse_lazy, reverse
@@ -8,6 +7,10 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from .forms import ReviewForm, TeacherForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 def logout_view(request):
@@ -25,6 +28,10 @@ class TeachersListViews(ListView):
 		context['subjects'] = Subjects.objects.all()
 		context['klasses'] = Klass.objects.all()
 		return context
+      
+def get_queryset(self):
+    # Показываем только не скрытые объявления
+    return Teacher.objects.filter(status='active')
 
 class TeachersDetailsView(DetailView):
 	model = Teacher
@@ -96,4 +103,38 @@ class MyAdsView(LoginRequiredMixin, ListView):
         print(context)
         return context
     
+@login_required
+def delete_teacher(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk, user=request.user)
+    teacher.delete()
+    return JsonResponse({'success': True})
+
+@login_required  
+def hide_teacher(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk, user=request.user)
+    teacher.is_hidden = True  # Предполагается, что у вас есть такое поле
+    teacher.save()
+    return JsonResponse({'success': True})
+
+@login_required
+def restore_teacher(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk, user=request.user)
+    teacher.is_hidden = False
+    teacher.save()
+    return JsonResponse({'success': True})
+    
+
+@login_required
+@require_POST
+def change_teacher_status(request, teacher_id, new_status):
+    """Изменяет статус объявления учителя"""
+    # Проверяем, что новый статус допустим
+    valid_statuses = dict(Teacher.STATUS_CHOICES).keys()
+    if new_status not in valid_statuses:
+        return JsonResponse({'success': False, 'error': 'Недопустимый статус'})
+    
+    teacher = get_object_or_404(Teacher, id=teacher_id, user=request.user)
+    teacher.status = new_status
+    teacher.save()
+    return JsonResponse({'success': True, 'new_status': new_status})
 

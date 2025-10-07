@@ -1,0 +1,186 @@
+.tabs {
+    display: flex;
+    justify-content: center; /* Центрируем содержимое */
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #666;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.tab-button:hover {
+    color: #4f46e5;
+}
+
+.tab-button.active {
+    color: #4f46e5;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #4f46e5;
+    border-radius: 2px 2px 0 0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    justify-content: flex-end;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.hide-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.hide-btn:hover {
+    background-color: #5a6268;
+}
+
+.restore-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.restore-btn:hover {
+    background-color: #218838;
+}
+
+/* Общие стили для ВСЕХ карточек (активных и скрытых) */
+.teacher-card,
+.hidden-teacher-card {
+    display: block;
+    margin: 0 auto;
+    max-width: 800px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+/* Стили, специфичные только для активных карточек */
+.teacher-card {
+    cursor: pointer;
+}
+
+.teacher-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+/* Стили для скрытых карточек (без hover эффектов) */
+.hidden-teacher-card {
+    opacity: 0.8;
+}
+
+.teacher-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.teacher-name {
+    margin-top: 0;
+    color: #2D3748;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease;
+    display: inline-block;
+}
+
+/* Hover эффект только для активных карточек */
+.teacher-card:hover .teacher-name {
+    border-bottom-color: #2D5BFF; /* яркий акцент при наведении */
+}
+
+.subjects, .klass, .price {
+    font-size: 0.9em;
+    color: #718096; /* вторичный текст */
+    margin: 5px 0;
+}
+
+.description {
+    margin: 10px 0;
+    line-height: 1.5;
+    color: #4A5568; 
+}
+
+.teacher-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* отступ между звездой и цифрой */
+    font-size: 14px;
+    color: #aaa;
+}
+
+.teacher-rating .star {
+    color: #FFD700;
+    font-size: 18px;
+}
+
+.teacher-rating .rating-value {
+    color: #aaa;
+}
+
+.teacher-card a,
+.teacher-card a:hover,
+.teacher-card a:active,
+.teacher-card a:visited,
+.hidden-teacher-card a,
+.hidden-teacher-card a:hover,
+.hidden-teacher-card a:active,
+.hidden-teacher-card a:visited {
+    text-decoration: none;
+}

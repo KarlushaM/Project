@@ -31,6 +31,15 @@ class Teacher(models.Model):
 	klass = models.ManyToManyField(Klass, verbose_name= "Класс")
 	phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
 
+	STATUS_CHOICES = [
+        ('active', 'Активное'),
+        ('hidden', 'Скрытое'),
+        ('moderation', 'На модерации'),
+    ]
+
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='moderation')
+
+
 	def average_rating(self):
 		reviews = self.reviews.all()  # предполагается, что related_name='reviews'
 		if not reviews:
@@ -63,3 +72,5 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.user.username} — {self.teacher.fio}"
+	
+	

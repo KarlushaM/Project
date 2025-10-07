@@ -8,4 +8,8 @@ urlpatterns = [
         path('<int:pk>/', TeachersDetailsView.as_view(), name = "teacher_details"),
         path('logout/', views.logout_view, name='logout'),
         path('my-ads/', MyAdsView.as_view(), name='my_ads'),
+        path('teacher/<int:pk>/delete/', views.delete_teacher, name='delete_teacher'),
+        path('teacher/<int:pk>/hide/', views.hide_teacher, name='hide_teacher'),
+        path('teacher/<int:pk>/restore/', views.restore_teacher, name='restore_teacher'),
+        path('teacher/<int:teacher_id>/status/<str:new_status>/', views.change_teacher_status, name='change_teacher_status'),
 ]

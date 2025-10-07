@@ -75,6 +75,7 @@
         </div>
 
         {% for teacher in teachers %}
+        {% if teacher.status == 'active' %}
             <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
             <div class="teacher-header">
             {% if teacher.photo %}
@@ -99,7 +100,9 @@
                 </div>
             {% endif %}
             </a>
+        {% endif %}
         {% endfor %}
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
