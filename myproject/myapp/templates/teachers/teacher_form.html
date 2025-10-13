@@ -16,12 +16,11 @@
     </style>
 </head>
 <body>
-      <header class="site-header">
+    <header class="site-header">
     <div class="header-card">
-        <!-- Логотип по центру -->
-        <div class="header-logo">
+        <a href="{% url 'teachers_list' %}" class="header-logo">
         <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
-        </div>
+        </a>
         <div class="header-controls">
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}" style="display: inline;">

@@ -14,10 +14,9 @@
 <body>
  <header class="site-header">
     <div class="header-card">
-        <!-- Логотип по центру -->
-        <div class="header-logo">
+        <a href="{% url 'teachers_list' %}" class="header-logo">
         <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
-        </div>
+        </a>
         <div class="header-controls">
             {% if user.is_authenticated %}
                 <form method="post" action="{% url 'logout' %}" style="display: inline;">
@@ -164,8 +163,9 @@
                 <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
             {% endif %}
         </div>
-        
     </div>
+
+
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

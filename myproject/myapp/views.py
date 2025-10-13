@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-
+from django.core.paginator import Paginator
 
 def logout_view(request):
     logout(request)
@@ -19,15 +19,40 @@ def logout_view(request):
 
 
 class TeachersListViews(ListView):
-	model = Teacher
-	template_name = "teachers/teachers_list.html"
-	context_object_name = "teachers"
+    model = Teacher
+    template_name = "teachers/teachers_list.html"
+    context_object_name = "teachers"
+    paginate_by = 15
+    
+    def get_queryset(self):
+        # Только активные учителя
+        queryset = Teacher.objects.filter(status='active')
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context['subjects'] = Subjects.objects.all()
-		context['klasses'] = Klass.objects.all()
-		return context
+        # Получаем списки выбранных фильтров из GET-параметров
+        selected_subjects = self.request.GET.getlist('subject')
+        selected_klasses = self.request.GET.getlist('klass')
+
+        # Фильтрация по предметам (ManyToMany)
+        if selected_subjects:
+            queryset = queryset.filter(subjects__name__in=selected_subjects)
+
+        # Фильтрация по классам (ManyToMany)
+        if selected_klasses:
+            queryset = queryset.filter(klass__name__in=selected_klasses)
+
+        # Убираем дубликаты (важно при ManyToMany-фильтрации!)
+        return queryset.distinct()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['subjects'] = Subjects.objects.all()
+        context['klasses'] = Klass.objects.all()
+
+        # Добавляем в контекст выбранные значения
+        context['selected_subjects'] = self.request.GET.getlist('subject')
+        context['selected_klasses'] = self.request.GET.getlist('klass')
+
+        return context
       
 def get_queryset(self):
     # Показываем только не скрытые объявления

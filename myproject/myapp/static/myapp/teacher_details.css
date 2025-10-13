@@ -1,0 +1,157 @@
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .teacher-profile {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+
+    .teacher-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+
+    .teacher-name {
+      margin: 0;
+      font-size: 28px;
+      color: #2D3748;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #4A5568;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-title svg {
+      margin-right: 8px;
+      color: #2D5BFF;
+    }
+
+    .section-content {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #2D3748;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background-color: #ebf4ff;
+      color: #2D5BFF;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .price-box {
+      background-color: #f0fdf4;
+      border-left: 4px solid #38a169;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #2F855A;
+    }
+
+    
+    #contacts-block {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    .review-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .review-card strong {
+        color: #2d3748;
+        font-weight: 600;
+    }
+
+    .review-card small {
+        color: #6c757d;
+        font-size: 12px;
+    }
+
+    .star-rating {
+        direction: rtl;
+        unicode-bidi: bidi-override;
+        font-size: 24px;
+        color: #ddd;
+        cursor: pointer;
+        text-align: left; /* ← Контейнер выровнен по левому краю */
+        display: inline-block; /* или block */
+    }
+
+    .star-rating .star {
+        display: inline-block;
+        padding: 0 2px;
+        transition: color 0.2s;
+    }
+
+    .star-rating .star:hover,
+    .star-rating .star:hover ~ .star,
+    .star-rating.selected .star.active,
+    .star-rating.selected .star.active ~ .star {
+        color: #FFD700;
+    }
+    .user-rating {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    .user-rating .star {
+        color: #ddd; /* серый */
+    }
+
+    .user-rating .star.full {
+        color: #FFD700; /* жёлтый */
+    }
+
+    .teacher-rating {
+        display: flex;
+        align-items: center;
+        gap: 6px; /* отступ между звездой и цифрой */
+        font-size: 14px;
+        color: #aaa;
+    }
+
+    .teacher-rating .star {
+        color: #FFD700;
+        font-size: 18px;
+    }
+
+    .teacher-rating .rating-value {
+        color: #aaa;
+    }
