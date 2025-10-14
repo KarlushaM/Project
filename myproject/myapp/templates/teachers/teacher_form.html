@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,39 +11,37 @@
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/teacher_form.css' %}">
-    <style>
-
-
-    </style>
+    <link rel="icon" type="image/png" href="{% static 'myapp/images/logo_footer.png' %}">
 </head>
 <body>
-    <header class="site-header">
+<header class="site-header">
     <div class="header-card">
         <a href="{% url 'teachers_list' %}" class="header-logo">
-        <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
+            <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
         </a>
         <div class="header-controls">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                    {% csrf_token %}
+                <div style="display: inline;">
+                    {% if user|in_group:"Модераторы" %}
+                        <a href="{% url 'moderation' %}" class="btn-outline">Модерация</a>
+                    {% endif %}
                     <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
-                    <button type="submit" class="btn-v">Выйти</button>
-                </form>
+                    
+                    <!-- Кнопка выхода: лучше использовать ссылку с POST через JS или форму без next -->
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;" id="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-v">Выйти</button>
+                    </form>
+                </div>
             {% else %}
                 <div style="display: inline;">
-                <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-                <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+                    <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn-v">Войти</a>
                 </div>
             {% endif %}
-            </div>
-
+        </div>
     </div>
-    </header>      
-
-
-    <a href="{% url 'my_ads' %}" class="back-button">
-        ← Назад к списку объявлений
-    </a>
+</header>         
     
     <h1>Сойдай своё объявление</h1>
     <div class="form-container">

@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,30 +11,37 @@
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/my_ads.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'myapp/images/logo_footer.png' %}">
 </head>
 <body>
- <header class="site-header">
+<header class="site-header">
     <div class="header-card">
         <a href="{% url 'teachers_list' %}" class="header-logo">
-        <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
+            <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
         </a>
         <div class="header-controls">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                    {% csrf_token %}
+                <div style="display: inline;">
+                    {% if user|in_group:"Модераторы" %}
+                        <a href="{% url 'moderation' %}" class="btn-outline">Модерация</a>
+                    {% endif %}
                     <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
-                    <button type="submit" class="btn-v">Выйти</button>
-
-                </form>
+                    
+                    <!-- Кнопка выхода: лучше использовать ссылку с POST через JS или форму без next -->
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;" id="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-v">Выйти</button>
+                    </form>
+                </div>
             {% else %}
-                <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-                <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+                <div style="display: inline;">
+                    <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn-v">Войти</a>
+                </div>
             {% endif %}
-            </div>
-
+        </div>
     </div>
-    </header>      
-    <a href="{% url 'teachers_list' %}" class="back-button">← Назад к списку репетиторов</a>
+</header>          
 
     <h1>Мои объявления</h1>
         <p style ="text-align: center;">
@@ -44,6 +52,7 @@
             <button class="tab-button active" data-tab="active">Активные</button>
             <button class="tab-button" data-tab="hidden">Скрытые</button>
             <button class="tab-button" data-tab="moderation">На модерации</button>
+            <button class="tab-button" data-tab="rejected">Отклонённые</button>
         </div>
         
         <!-- Контент вкладок -->
@@ -163,6 +172,46 @@
                 <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
             {% endif %}
         </div>
+
+        <div id="rejected" class="tab-content">
+            {% if teachers %}
+            {% for teacher in teachers %}
+            {% if teacher.status == 'rejected' %}
+            <div class="teacher-card" data-teacher-id="{{ teacher.id }}" data-status="hidden">
+                <a href="{% url 'teacher_details' teacher.id %}" class="teacher-link">
+                        <div class="teacher-header">
+                            {% if teacher.photo %}
+                                <img src="{{ teacher.photo.url }}" alt="Фото {{ teacher.fio }}" class="avatar">
+                            {% else %}
+                                <div class="avatar-placeholder">{{ teacher.fio|first }}</div>
+                            {% endif %}
+                            <h1 class="teacher-name">{{ teacher.fio }}</h1>
+                        </div>
+                        <p class="subjects">Предметы: {{ teacher.subjects_list }}</p>
+                        <p class="klass">Классы: {{ teacher.klass_list }}</p>
+                        <p class="price">Цена: {{ teacher.price }}</p>
+                        {% if teacher.average_rating > 0 %}
+                        <div class="teacher-rating">
+                            <span class="rating-value">{{ teacher.average_rating }}</span>
+                            <span class="star">★</span>
+                        </div>
+                        {% else %}
+                            <div class="teacher-rating">
+                                <span class="rating-value">Нет отзывов</span>
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-actions">
+                        <button class="action-btn delete-btn" data-teacher-id="{{ teacher.id }}">Удалить</button>
+                    </div>
+            </div>
+                {% endif %}
+                {% endfor %}
+            {% else %}
+                <p style="color: #6c757d; text-align: center;">У вас пока нет объявлений.</p>
+            {% endif %}
+        </div>
+
     </div>
 
 

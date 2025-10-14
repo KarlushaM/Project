@@ -1,6 +1,7 @@
-from django.urls import path
+
 from .views import TeachersListViews, TeachersDetailsView, TeacherFormView, MyAdsView
 from . import views
+from django.urls import path, include
 
 urlpatterns = [
 		path('', TeachersListViews.as_view(), name = "teachers_list"),
@@ -12,4 +13,6 @@ urlpatterns = [
         path('teacher/<int:pk>/hide/', views.hide_teacher, name='hide_teacher'),
         path('teacher/<int:pk>/restore/', views.restore_teacher, name='restore_teacher'),
         path('teacher/<int:teacher_id>/status/<str:new_status>/', views.change_teacher_status, name='change_teacher_status'),
+        path('moderation/', views.ModerationView.as_view(), name='moderation'),
+        path('accounts/', include('django.contrib.auth.urls')),
 ]

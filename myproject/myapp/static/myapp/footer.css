@@ -70,8 +70,8 @@
 }
 
 .footer-logo {
-  max-width: 120px;       /* ограничим ширину */
+  max-width: 100px;       /* ограничим ширину */
   height: auto;           /* сохраним пропорции */
   display: block;
-  margin: 0 auto 0px;
+  margin: 0 auto 10px;
 }

@@ -35,6 +35,7 @@ class Teacher(models.Model):
         ('active', 'Активное'),
         ('hidden', 'Скрытое'),
         ('moderation', 'На модерации'),
+		('rejected', 'Отклонённые'),
     ]
 
 	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='moderation')

@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/pagination.css' %}">
     <link rel="icon" type="image/png" href="{% static 'myapp/images/logo_footer.png' %}">
+    <style>    
+  </style>
 </head>
 <body>
 <header class="site-header">
@@ -43,43 +45,13 @@
             {% endif %}
         </div>
     </div>
-</header>      
+</header>       
 
-    <h1>Список репетиторов</h1>
-
-        <form method="get" id="filter-form" style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center; justify-content: center;">
-            <div class="dropdown">
-                <button type="button" class="dropdown-btn">Предметы ▼</button>
-                <div class="dropdown-content">
-                    {% for subject in subjects %}
-                        <label>
-                            <input type="checkbox" name="subject" value="{{ subject.name }}"
-                                {% if subject.name in selected_subjects %}checked{% endif %}>
-                            {{ subject.name }}
-                        </label><br>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <div class="dropdown">
-                <button type="button" class="dropdown-btn">Классы ▼</button>
-                <div class="dropdown-content">
-                    {% for klass in klasses %}
-                        <label>
-                            <input type="checkbox" name="klass" value="{{ klass.name }}"
-                                {% if klass.name in selected_klasses %}checked{% endif %}>
-                            {{ klass.name }}
-                        </label><br>
-                    {% endfor %}
-                </div>
-            </div>
-
-            <button type="submit" class="btn-outline">Показать</button>
-        </form>
+    <h1>Ожидают модерацию</h1>
 
         {% if page_obj %}
             {% for teacher in page_obj %}
-                {% if teacher.status == 'active' %}
+                {% if teacher.status == 'moderation' %}
                     <a href="{% url 'teacher_details' teacher.id %}" class="teacher-card">
                     <div class="teacher-header">
                     {% if teacher.photo %}
@@ -106,10 +78,7 @@
                     </a>
                 {% endif %}
             {% endfor %}
-        {% else %}
-            <div class="no-results">
-                🔍 Совпадений не найдено. Попробуйте изменить фильтры.
-            </div>
+
         {% endif %}
 
 

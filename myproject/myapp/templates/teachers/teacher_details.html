@@ -1,6 +1,6 @@
 {% load static %}
 {% load rating_tags %}
-
+{% load user_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,37 +12,39 @@
     <link rel="stylesheet" href="{% static 'myapp/footer.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/header.css' %}">
     <link rel="stylesheet" href="{% static 'myapp/teacher_details.css' %}">
-  <style>
-
-
-  </style>
-
+    <link rel="icon" type="image/png" href="{% static 'myapp/images/logo_footer.png' %}">
 </head>
 <body>
-    <header class="site-header">
+<header class="site-header">
     <div class="header-card">
         <a href="{% url 'teachers_list' %}" class="header-logo">
-        <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
+            <img src="{% static 'myapp/images/logo_header.png' %}" alt="ProMozgi" class="logo-img">
         </a>
         <div class="header-controls">
             {% if user.is_authenticated %}
-                <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                  {% csrf_token %}
-                  <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
-                  <button type="submit" class="btn-v">Выйти</button>
-                </form>
+                <div style="display: inline;">
+                    {% if user|in_group:"Модераторы" %}
+                        <a href="{% url 'moderation' %}" class="btn-outline">Модерация</a>
+                    {% endif %}
+                    <a href="{% url 'my_ads' %}" class="btn-outline">Мои объявления</a>
+                    
+                    <!-- Кнопка выхода: лучше использовать ссылку с POST через JS или форму без next -->
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;" id="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-v">Выйти</button>
+                    </form>
+                </div>
             {% else %}
-                <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
-                <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">Войти</a>
+                <div style="display: inline;">
+                    <a href="{% url 'register' %}" class="btn-outline">Регистрация</a>
+                    <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="btn-v">Войти</a>
+                </div>
             {% endif %}
-            </div>
-
+        </div>
     </div>
-    </header>      
+</header>     
 
-  <a href="{% url 'teachers_list' %}" class="back-button">← Назад к списку репетиторов</a>
   <div class="container">
-  
     <div class="teacher-profile">
       <div class="teacher-header">
           {% if teacher.photo %}
@@ -124,7 +126,25 @@
             <a href="{% url 'login' %}?next={{ request.path }}" class="btn-v">🔒 Войти, чтобы записаться</a>
         {% endif %}
     </div>
-    <!-- Блок с отзывами -->
+
+      {% if is_moderator and teacher.status == 'moderation' %}
+      <div class="moderation-panel">
+          <h3 style="text-align: center;">Модерация объявления</h3>
+          <div class="moderation-actions">
+              <form method="post" class="moderation-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="approve">
+                  <button type="submit" class="btn btn-approve">Опубликовать</button>
+              </form>
+              <form method="post" class="moderation-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="reject">
+                  <button type="submit" class="btn btn-reject">Отказать</button>
+              </form>
+          </div>
+      </div>
+      {% endif %}
+
     <div style="margin-top: 40px; padding: 20px; background: #fff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
         <h3 class="section-title">⭐️ Отзывы</h3>
 

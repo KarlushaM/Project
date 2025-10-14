@@ -30,35 +30,6 @@ h1 {
         transform: translateY(-1px);
         }
 
-        
-
-.back-button {
-        display: block;
-        width: fit-content;
-        color: #007bff;
-        text-decoration: none;
-        background: none;
-        border: none;
-        padding: 10px 16px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border-radius: 8px;
-        font-weight: 500;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-.back-button:hover {
-        background-color: #e3f2fd;
-        transform: translateY(-1px);
-    }
-.back-button svg {
-        width: 16px;
-        height: 16px;
-        margin-right: 8px;
-    }
-
-
 .btn-outline {
         display: inline-block;
         padding: 10px 16px;

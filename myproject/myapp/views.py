@@ -6,12 +6,13 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from .forms import ReviewForm, TeacherForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 def logout_view(request):
     logout(request)
@@ -59,35 +60,50 @@ def get_queryset(self):
     return Teacher.objects.filter(status='active')
 
 class TeachersDetailsView(DetailView):
-	model = Teacher
-	template_name = "teachers/teacher_details.html"
-	context_object_name = "teacher"
+    model = Teacher
+    template_name = "teachers/teacher_details.html"
+    context_object_name = "teacher"
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		teacher = self.get_object()
-		context['reviews'] = teacher.reviews.all().order_by('-created_at')
-		context['form'] = ReviewForm()
-		return context
-	
-	def post(self, request, *args, **kwargs):
-		if not request.user.is_authenticated:
-			from django.urls import reverse
-			return redirect(f"{reverse('login')}?next={request.path}")
-		
-		teacher = self.get_object()
-		form = ReviewForm(request.POST)
-		if form.is_valid():
-			review = form.save(commit=False)
-			review.teacher = teacher
-			review.user = request.user
-			review.save()
-			return redirect('teacher_details', pk=teacher.pk)
-		else:
-            # Если форма невалидна — рендерим страницу с ошибками
-			context = self.get_context_data()
-			context['form'] = form
-			return render(request, self.template_name, context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        teacher = self.get_object()
+        context['reviews'] = teacher.reviews.all().order_by('-created_at')
+        context['form'] = ReviewForm()
+        # Добавляем флаг: является ли пользователь модератором
+        context['is_moderator'] = self.request.user.groups.filter(name='Модераторы').exists()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        teacher = self.get_object()
+
+        # Если POST-запрос от модератора с action — обрабатываем модерацию
+        if request.user.is_authenticated and request.user.groups.filter(name='Модераторы').exists():
+            action = request.POST.get('action')
+            if action in ['approve', 'reject']:
+                if action == 'approve':
+                    teacher.status = 'active'
+                    messages.success(request, "Объявление опубликовано.")
+                elif action == 'reject':
+                    teacher.status = 'rejected'
+                    messages.warning(request, "Объявление отклонено.")
+                teacher.save()
+                return redirect('teacher_details', pk=teacher.pk)
+
+        # Иначе — обрабатываем как отзыв (старая логика)
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={request.path}")
+
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.teacher = teacher
+            review.user = request.user
+            review.save()
+            return redirect('teacher_details', pk=teacher.pk)
+        else:
+            context = self.get_context_data()
+            context['form'] = form
+            return render(request, self.template_name, context)
 	
 
 class TeacherFormView(LoginRequiredMixin, CreateView):
@@ -163,3 +179,19 @@ def change_teacher_status(request, teacher_id, new_status):
     teacher.save()
     return JsonResponse({'success': True, 'new_status': new_status})
 
+class ModerationView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+    model = Teacher
+    template_name = 'teachers/moderation.html'
+    context_object_name = 'teachers'
+    paginate_by = 15
+
+    def get_queryset(self):
+        # Только объявления на модерации
+        return Teacher.objects.filter(status='moderation')
+
+    def test_func(self):
+        # Доступ только модераторам
+        return self.request.user.groups.filter(name='Модераторы').exists()
+    
+
+	
