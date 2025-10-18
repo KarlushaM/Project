@@ -55,9 +55,6 @@ class TeachersListViews(ListView):
 
         return context
       
-def get_queryset(self):
-    # Показываем только не скрытые объявления
-    return Teacher.objects.filter(status='active')
 
 class TeachersDetailsView(DetailView):
     model = Teacher
